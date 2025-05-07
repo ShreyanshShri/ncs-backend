@@ -40,22 +40,8 @@ router.post("/submit-solution", authenticate, async (req, res) => {
 			return res.status(404).json({ error: "User not found" });
 		}
 
-		// Check if the user has already submitted for this bounty
-		let bountySubmission = user.bountySubmissions.find(
-			(submission) => submission.bountyId.toString() === bountyId
-		);
-
-		if (!bountySubmission) {
-			// If no submission exists for this bounty, create a new one
-			bountySubmission = {
-				bountyId,
-				solutions: [],
-			};
-			user.bountySubmissions.push(bountySubmission);
-		}
-
 		// Add the solution to the bounty's solutions array
-		bountySubmission.solutions.push({
+		user.solutions.push({
 			...solution,
 			time: Date.now(), // Automatically set the current time
 		});
@@ -98,11 +84,11 @@ router.post("/get-bounties", authenticate, async (req, res) => {
 		}
 
 		// Fetch bounties of the same year as the user
-		const bounties = await Bounty.find({ year: user.year }).select(
+		const bounty = await Bounty.findById(user.assignedBounty).select(
 			"-solutions"
 		);
 
-		res.status(200).json({ bounties });
+		res.status(200).json({ bounty });
 	} catch (error) {
 		console.error("Error fetching bounties:", error);
 		res.status(500).json({ error: "Internal server error." });

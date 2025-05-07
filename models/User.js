@@ -25,30 +25,25 @@ const UserSchema = new mongoose.Schema({
 		// required: true, // temperarily removed for testing
 		// unique: true, // temperarily removed for testing
 	},
-	bountySubmissions: [
+	assignedBounty: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Bounty",
+	},
+	solutions: [
 		{
-			bountyId: {
-				type: mongoose.Schema.Types.ObjectId,
-				ref: "Bounty",
-				required: true,
+			from: {
+				type: Number,
 			},
-			solutions: [
-				{
-					from: {
-						type: Number,
-					},
-					to: {
-						type: Number,
-					},
-					page: {
-						type: String,
-					},
-					time: {
-						type: Date,
-						default: Date.now, // Automatically sets the current date when a solution is added
-					},
-				},
-			],
+			to: {
+				type: Number,
+			},
+			page: {
+				type: String,
+			},
+			time: {
+				type: Date,
+				default: Date.now, // Automatically sets the current date when a solution is added
+			},
 		},
 	],
 	clueHuntOrder: [Number],

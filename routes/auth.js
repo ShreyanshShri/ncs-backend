@@ -59,7 +59,6 @@ router.get("/get-user", authenticate, async (req, res) => {
 			message: "Success",
 			name: user.name,
 			email: user.email,
-			bountySubmissions: user.bountySubmissions,
 			year: user.year,
 			admissionNumber: user.admissionNumber,
 			clueHuntOrder: user.clueHuntOrder,

@@ -27,35 +27,33 @@ const checkBounties = async () => {
 			let correctResponses = 0;
 
 			// If the user has no bounty submissions, skip to the next user
-			if (!user.bountySubmissions || user.bountySubmissions.length === 0) {
+			if (!user.solutions || user.solutions.length === 0) {
 				console.log(
 					"No bounty submissions found for this user. Moving to the next user."
 				);
 				csvData += `${user.name},${user.admissionNumber},${user.year},${correctResponses}\n`;
 				continue;
 			}
+			const bounty = await Bounty.findById(user.assignedBounty);
+
+			if (!bounty) {
+				console.log(
+					`Bounty with ID ${submission.bountyId} not found. Skipping.`
+				);
+				continue;
+			}
 
 			// Iterate through each bounty submission of the user
-			for (const submission of user.bountySubmissions) {
+			for (const solution of user.solutions) {
 				// Fetch the corresponding bounty using the bountyId
-				const bounty = await Bounty.findById(submission.bountyId);
-
-				if (!bounty) {
-					console.log(
-						`Bounty with ID ${submission.bountyId} not found. Skipping.`
-					);
-					continue;
-				}
-
-				console.log(`Checking bounty: ${bounty.name}`);
 
 				// Iterate through each solution in the bounty
 				for (const bountySolution of bounty.solutions) {
 					const matched = submission.solutions.some((userSolution) => {
 						return (
-							bountySolution.page === userSolution.page &&
-							bountySolution.from === userSolution.from &&
-							bountySolution.to === userSolution.to
+							bountySolution.page === solution.page &&
+							bountySolution.from === solution.from &&
+							bountySolution.to === solution.to
 						);
 					});
 
