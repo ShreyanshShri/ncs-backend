@@ -1,0 +1,4 @@
+Name,Admission Number,Year,ClueHuntExpectedAnswer,ClueHuntResponse,isCorrect
+John Doe,2023001,1,"LisbonRomeBrusselsAthensBerlinParisMadridAmsterdamViennaBern","LisbonRomeBrusselsAthensBerlinParisMadridAmsterdamViennaBern",true
+Jane Smith,2023002,2,"LisbonMadridParisAthensBernBrusselsBerlinViennaRomeAmsterdam","undefined",false
+Alice Johnson,2023003,1,"AthensBernLisbonMadridRomeBerlinBrusselsViennaAmsterdamParis","undefined",false
