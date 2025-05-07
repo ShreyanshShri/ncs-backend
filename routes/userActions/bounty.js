@@ -4,7 +4,7 @@ const User = require("../../models/User");
 const Bounty = require("../../models/Bounty");
 const authenticate = require("../../middleware/authenticate");
 
-router.post("/submit-solution", authenticate, async (req, res) => {
+router.post("/submit-solutions", authenticate, async (req, res) => {
 	const endTime = new Date(process.env.BOUNTY_END_TIME); // Fetch the release time from environment variables
 	const currentTime = new Date();
 	if (currentTime > endTime) {
@@ -14,16 +14,15 @@ router.post("/submit-solution", authenticate, async (req, res) => {
 		});
 	}
 	try {
-		const { bountyId, solution } = req.body;
+		const { bountyId, solutions } = req.body;
 		const email = req.user.email;
 
 		// Validate required fields
 		if (
 			!bountyId ||
-			!solution ||
-			!solution.page ||
-			solution.from === undefined ||
-			solution.to === undefined
+			!solutions ||
+			solutions.length === 0 ||
+			!Array.isArray(solutions)
 		) {
 			return res.status(400).json({ error: "Invalid or missing fields" });
 		}
@@ -40,11 +39,14 @@ router.post("/submit-solution", authenticate, async (req, res) => {
 			return res.status(404).json({ error: "User not found" });
 		}
 
-		// Add the solution to the bounty's solutions array
-		user.solutions.push({
-			...solution,
-			time: Date.now(), // Automatically set the current time
+		const timedSolutions = solutions.map((solution) => {
+			return {
+				...solution,
+				time: Date.now(), // Automatically set the current time
+			};
 		});
+		// Add the solution to the bounty's solutions array
+		user.solutions = timedSolutions;
 
 		// Save the user document
 		await user.save();
