@@ -17,12 +17,14 @@ router.post("/login", async (req, res) => {
 		if (user == null || user == undefined) {
 			return res.status(400).json({
 				message: "No user found",
+				success: false,
 			});
 		}
 
 		if ((await bcrypt.compare(password, user.password)) == false) {
 			return res.status(400).json({
 				message: "Invalid password",
+				success: false,
 			});
 		}
 
@@ -34,11 +36,13 @@ router.post("/login", async (req, res) => {
 		res.status(200).json({
 			message: "Success",
 			token,
+			success: true,
 		});
 	} catch (err) {
 		res.status(400).json({
 			message: "Failed",
 			err: err.message,
+			success: false,
 		});
 	}
 });
@@ -52,6 +56,7 @@ router.get("/get-user", authenticate, async (req, res) => {
 		if (user == null || user == undefined) {
 			return res.status(400).json({
 				message: "No user found",
+				success: false,
 			});
 		}
 
@@ -62,11 +67,15 @@ router.get("/get-user", authenticate, async (req, res) => {
 			year: user.year,
 			admissionNumber: user.admissionNumber,
 			clueHuntOrder: user.clueHuntOrder,
+			assignedBounty: user.assignedBounty,
+			clueHuntResponse: user.clueHuntResponse,
+			success: true,
 		});
 	} catch (err) {
 		res.status(400).json({
 			message: "Failed",
 			err: err.message,
+			success: false,
 		});
 	}
 });
@@ -77,6 +86,7 @@ router.post("/admin-login", async (req, res) => {
 	if (password !== process.env.ADMIN_PASSWORD) {
 		return res.status(400).json({
 			message: "Invalid password",
+			success: false,
 		});
 	}
 
@@ -88,6 +98,7 @@ router.post("/admin-login", async (req, res) => {
 	res.status(200).json({
 		message: "Success",
 		token,
+		success: true,
 	});
 });
 

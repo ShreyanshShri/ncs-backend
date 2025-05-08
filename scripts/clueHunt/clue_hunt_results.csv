@@ -1,0 +1,6 @@
+Team Id,Year,ClueHuntExpectedAnswer,ClueHuntResponse,isCorrect
+team1,2,"RomeBerlinBrusselsMadridBernLisbonParisViennaAmsterdamAthens","LisbonRomeBrusselsAthensBerlinParisMadridAmsterdamViennaBern",false
+team2,2,"AmsterdamViennaBernLisbonMadridRomeBerlinParisBrusselsAthens","undefined",false
+team3,2,"ViennaBrusselsLisbonMadridRomeAmsterdamBerlinAthensParisBern","undefined",false
+team4,2,"BernAmsterdamParisViennaAthensMadridBerlinLisbonRomeBrussels","undefined",false
+team5,2,"ParisBrusselsMadridAthensLisbonBerlinViennaRomeAmsterdamBern","undefined",false

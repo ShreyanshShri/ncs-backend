@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
+const { users } = require("../data/users"); // Assuming users are stored in a separate file
 
 const seedUsers = async () => {
 	try {
@@ -11,31 +12,6 @@ const seedUsers = async () => {
 			useUnifiedTopology: true,
 		});
 		console.log("Connected to the database");
-
-		// Dummy users data
-		const users = [
-			{
-				name: "John Doe",
-				email: "john.doe@example.com",
-				password: "password123", // Ideally, hash passwords before saving
-				year: 1,
-				admissionNumber: "2023001",
-			},
-			{
-				name: "Jane Smith",
-				email: "jane.smith@example.com",
-				password: "password123",
-				year: 2,
-				admissionNumber: "2023002",
-			},
-			{
-				name: "Alice Johnson",
-				email: "alice.johnson@example.com",
-				password: "password123",
-				year: 1,
-				admissionNumber: "2023003",
-			},
-		];
 
 		// Clear existing users
 		await User.deleteMany({});

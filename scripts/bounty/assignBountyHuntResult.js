@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
+const Team = require("../../models/Team");
 require("dotenv").config();
 
 const evaluateBountyHunt = async () => {
@@ -12,23 +12,21 @@ const evaluateBountyHunt = async () => {
 		console.log("Connected to the database");
 
 		// Fetch all users
-		const users = await User.find();
+		const teams = await Team.find();
 
 		// Sort users by `correctResponses` in descending order
-		const sortedUsers = users.sort(
+		const sortedTeams = teams.sort(
 			(a, b) => b.correctResponses - a.correctResponses
 		);
 
 		// Get the top 10 users
-		const topUsers = sortedUsers.slice(0, 2);
+		const topTeams = sortedTeams.slice(0, 2);
 
 		// Update `hasPassedBountyHunt` to true for the top 10 users
-		for (const user of topUsers) {
-			user.hasPassedBountyHunt = true;
-			await user.save();
-			console.log(
-				`Updated hasPassedBountyHunt for user: ${user.name} (${user.email})`
-			);
+		for (const team of topTeams) {
+			team.hasPassedBountyHunt = true;
+			await team.save();
+			console.log(`Updated hasPassedBountyHunt for user: ${team.teamId}`);
 		}
 
 		// Disconnect from the database

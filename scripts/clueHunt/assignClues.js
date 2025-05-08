@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
-const { clues } = require("../data/clueHuntClues"); // Assuming clues are stored in a separate file
+const Team = require("../../models/Team");
+const { clues } = require("../../data/clueHuntClues"); // Assuming clues are stored in a separate file
 require("dotenv").config();
 
 const assignClues = async () => {
@@ -13,13 +13,13 @@ const assignClues = async () => {
 		console.log("Connected to the database");
 
 		// Fetch all users
-		const users = await User.find();
+		const teams = await Team.find();
 
 		// Get the total number of clues
 		const totalClues = clues.length;
 
-		for (const user of users) {
-			console.log(`Assigning clues to user: ${user.name} (${user.email})`);
+		for (const team of teams) {
+			console.log(`Assigning clues to user: ${team.teamId}`);
 
 			// Generate a random order of clue indices
 			const randomIndices = Array.from(
@@ -33,13 +33,13 @@ const assignClues = async () => {
 				.join("");
 
 			// Assign the random indices and combined answers to the user
-			user.clueHuntOrder = randomIndices;
-			user.clueHuntExpectedAnswer = combinedAnswers;
+			team.clueHuntOrder = randomIndices;
+			team.clueHuntExpectedAnswer = combinedAnswers;
 
 			// Save the updated user
-			await user.save();
+			await team.save();
 
-			console.log(`Clues assigned to user: ${user.name}`);
+			console.log(`Clues assigned to user: ${team.teamId}`);
 		}
 
 		// Disconnect from the database

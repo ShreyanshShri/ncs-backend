@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
-const Bounty = require("../models/Bounty");
+const Team = require("../../models/Team");
+const Bounty = require("../../models/Bounty");
 require("dotenv").config();
 
 const assignBounty = async () => {
@@ -18,34 +18,28 @@ const assignBounty = async () => {
 			throw new Error("No bounties found in the database.");
 		}
 
-		// Fetch all users
-		const users = await User.find();
-		if (users.length === 0) {
-			throw new Error("No users found in the database.");
-		}
+		const teams = await Team.find();
 
-		for (const user of users) {
-			// Filter bounties for the same year as the user
+		for (const team of teams) {
+			// Filter bounties for the same year as the team
 			const eligibleBounties = bounties.filter(
-				(bounty) => bounty.year === user.year
+				(bounty) => bounty.year === team.year
 			);
 
 			if (eligibleBounties.length === 0) {
-				console.log(
-					`No eligible bounties found for user: ${user.name} (${user.email})`
-				);
+				console.log(`No eligible bounties found for team: ${team.name})`);
 				continue;
 			}
 
 			// Assign a random bounty from the eligible bounties
 			const randomBounty =
 				eligibleBounties[Math.floor(Math.random() * eligibleBounties.length)];
-			user.assignedBounty = randomBounty._id;
+			team.assignedBounty = randomBounty._id;
 
-			// Save the updated user
-			await user.save();
+			// Save the updated team
+			await team.save();
 			console.log(
-				`Assigned bounty "${randomBounty.name}" to user: ${user.name} (${user.email})`
+				`Assigned bounty "${randomBounty.name}" to team: ${team.name}`
 			);
 		}
 

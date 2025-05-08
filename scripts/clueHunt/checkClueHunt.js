@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
+const User = require("../../models/User");
+const Team = require("../../models/Team");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
@@ -14,20 +15,20 @@ const checkClueHunt = async () => {
 		console.log("Connected to the database");
 
 		// Fetch all users
-		const users = await User.find();
+		const teams = await Team.find().populate("users");
 
 		// Prepare CSV data
 		let csvData =
-			"Name,Admission Number,Year,ClueHuntExpectedAnswer,ClueHuntResponse,isCorrect\n";
+			"Team Id,Year,ClueHuntExpectedAnswer,ClueHuntResponse,isCorrect\n";
 
-		for (const user of users) {
-			console.log(`Checking clue hunt for user: ${user.name} (${user.email})`);
+		for (const team of teams) {
+			console.log(`Checking clue hunt for user: ${team.teamId}`);
 
 			// Compare clueHuntExpectedAnswer with clueHuntResponse
-			const isCorrect = user.clueHuntExpectedAnswer === user.clueHuntResponse;
+			const isCorrect = team.clueHuntExpectedAnswer === team.clueHuntResponse;
 
 			// Add user data to CSV
-			csvData += `${user.name},${user.admissionNumber},${user.year},"${user.clueHuntExpectedAnswer}","${user.clueHuntResponse}",${isCorrect}\n`;
+			csvData += `${team.teamId},${team.year},"${team.clueHuntExpectedAnswer}","${team.clueHuntResponse}",${isCorrect}\n`;
 		}
 
 		// Write CSV data to a file

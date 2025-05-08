@@ -25,41 +25,13 @@ const UserSchema = new mongoose.Schema({
 		// required: true, // temperarily removed for testing
 		// unique: true, // temperarily removed for testing
 	},
-	assignedBounty: {
+	teamId: {
+		type: String,
+		// required: true, // temperarily removed for testing
+	},
+	team: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Bounty",
-	},
-	solutions: [
-		{
-			from: {
-				type: Number,
-			},
-			to: {
-				type: Number,
-			},
-			page: {
-				type: String,
-			},
-			time: {
-				type: Date,
-				default: Date.now, // Automatically sets the current date when a solution is added
-			},
-		},
-	],
-	correctResponses: {
-		type: Number,
-		default: 0,
-	},
-	clueHuntOrder: [Number],
-	clueHuntExpectedAnswer: {
-		type: String,
-	},
-	clueHuntResponse: {
-		type: String,
-	},
-	hasPassedBountyHunt: {
-		type: Boolean,
-		default: false,
+		ref: "Team",
 	},
 });
 

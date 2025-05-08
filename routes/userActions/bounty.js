@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/User");
 const Bounty = require("../../models/Bounty");
+const Team = require("../../models/Team");
 const authenticate = require("../../middleware/authenticate");
 
-router.post("/submit-solutions", authenticate, async (req, res) => {
+router.post("/submit-solution", authenticate, async (req, res) => {
 	const endTime = new Date(process.env.BOUNTY_END_TIME); // Fetch the release time from environment variables
 	const currentTime = new Date();
 	if (currentTime > endTime) {
@@ -14,44 +15,52 @@ router.post("/submit-solutions", authenticate, async (req, res) => {
 		});
 	}
 	try {
-		const { bountyId, solutions } = req.body;
-		const email = req.user.email;
+		const { bountyId, solution } = req.body;
+
+		const user = await User.findOne({ email: req.user.email });
+		if (!user) {
+			return res.status(404).json({ error: "User not found", success: false });
+		}
+
+		const teamId = user.team;
 
 		// Validate required fields
-		if (
-			!bountyId ||
-			!solutions ||
-			solutions.length === 0 ||
-			!Array.isArray(solutions)
-		) {
-			return res.status(400).json({ error: "Invalid or missing fields" });
+		if (!bountyId || !solution) {
+			return res
+				.status(400)
+				.json({ error: "Invalid or missing fields", success: false });
 		}
 
 		// Check if the bounty exists
 		const bounty = await Bounty.findById(bountyId);
 		if (!bounty) {
-			return res.status(404).json({ error: "Bounty not found" });
+			return res
+				.status(404)
+				.json({ error: "Bounty not found", success: false });
 		}
 
 		// Find the user
-		const user = await User.findOne({ email: email });
-		if (!user) {
-			return res.status(404).json({ error: "User not found" });
+		const team = await Team.findById(teamId);
+		if (!team) {
+			return res.status(404).json({ error: "Team not found", success: false });
 		}
 
-		const timedSolutions = solutions.map((solution) => {
-			return {
-				...solution,
-				time: Date.now(), // Automatically set the current time
-			};
-		});
 		// Add the solution to the bounty's solutions array
-		user.solutions = timedSolutions;
+		team.solutions.push({
+			...solution,
+			time: new Date(), // Set the current time as the submission time
+		});
 
 		// Save the user document
-		await user.save();
+		await team.save();
 
-		res.status(200).json({ message: "Solution submitted successfully", user });
+		res
+			.status(200)
+			.json({
+				message: "Solution submitted successfully",
+				team,
+				success: true,
+			});
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Internal server error" });
@@ -67,7 +76,9 @@ router.post("/get-bounties", authenticate, async (req, res) => {
 
 		// Verify the passkey
 		if (!passkey || passkey !== envPasskey) {
-			return res.status(403).json({ error: "Invalid or missing passkey." });
+			return res
+				.status(403)
+				.json({ error: "Invalid or missing passkey.", success: false });
 		}
 
 		// Check if the current time is past the release time
@@ -76,24 +87,30 @@ router.post("/get-bounties", authenticate, async (req, res) => {
 			return res.status(403).json({
 				error:
 					"Bounties are not available yet. Please wait until the release time.",
+				success: false,
 			});
 		}
 
 		// Find the user
 		const user = await User.findOne({ email: email });
 		if (!user) {
-			return res.status(404).json({ error: "User not found." });
+			return res.status(404).json({ error: "User not found.", success: false });
+		}
+
+		const team = await Team.findById(user.team); // Populate the team field
+		if (!team) {
+			return res.status(404).json({ error: "Team not found.", success: false });
 		}
 
 		// Fetch bounties of the same year as the user
-		const bounty = await Bounty.findById(user.assignedBounty).select(
+		const bounty = await Bounty.findById(team.assignedBounty).select(
 			"-solutions"
 		);
 
-		res.status(200).json({ bounty });
+		res.status(200).json({ bounty, success: true });
 	} catch (error) {
 		console.error("Error fetching bounties:", error);
-		res.status(500).json({ error: "Internal server error." });
+		res.status(500).json({ error: "Internal server error.", success: false });
 	}
 });
 

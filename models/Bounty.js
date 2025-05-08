@@ -15,7 +15,7 @@ const BountySchema = new mongoose.Schema({
 	},
 	solutions: [
 		{
-			page: {
+			filename: {
 				type: String,
 				required: true,
 			},
@@ -25,6 +25,10 @@ const BountySchema = new mongoose.Schema({
 			},
 			to: {
 				type: Number,
+				required: true,
+			},
+			bugDescription: {
+				type: String,
 				required: true,
 			},
 		},
