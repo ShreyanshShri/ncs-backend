@@ -46,6 +46,10 @@ const UserSchema = new mongoose.Schema({
 			},
 		},
 	],
+	correctResponses: {
+		type: Number,
+		default: 0,
+	},
 	clueHuntOrder: [Number],
 	clueHuntExpectedAnswer: {
 		type: String,

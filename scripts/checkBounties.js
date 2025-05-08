@@ -47,22 +47,23 @@ const checkBounties = async () => {
 			for (const solution of user.solutions) {
 				// Fetch the corresponding bounty using the bountyId
 
+				let matched = false;
 				// Iterate through each solution in the bounty
 				for (const bountySolution of bounty.solutions) {
-					const matched = submission.solutions.some((userSolution) => {
-						return (
-							bountySolution.page === solution.page &&
-							bountySolution.from === solution.from &&
-							bountySolution.to === solution.to
-						);
-					});
-
-					if (matched) {
-						correctResponses++;
+					if (
+						solution.from === bountySolution.from &&
+						solution.to === bountySolution.to &&
+						solution.page === bountySolution.page
+					) {
+						matched = true;
 					}
 				}
+				if (matched) {
+					correctResponses++;
+				}
 			}
-
+			user.correctResponses = correctResponses;
+			await user.save();
 			// Add user data to CSV
 			csvData += `${user.name},${user.admissionNumber},${user.year},${correctResponses}\n`;
 		}
