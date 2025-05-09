@@ -54,32 +54,21 @@ router.post("/submit-solution", authenticate, async (req, res) => {
 		// Save the user document
 		await team.save();
 
-		res
-			.status(200)
-			.json({
-				message: "Solution submitted successfully",
-				team,
-				success: true,
-			});
+		res.status(200).json({
+			message: "Solution submitted successfully",
+			team,
+			success: true,
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Internal server error" });
 	}
 });
 
-router.post("/get-bounties", authenticate, async (req, res) => {
+router.get("/get-bounties", authenticate, async (req, res) => {
 	try {
-		const { passkey } = req.body; // Passkey sent by the user in the query parameters
 		const email = req.user.email; // Assuming `authenticate` middleware attaches the authenticated user's email to `req.user`
 		const releaseTime = new Date(process.env.BOUNTY_RELEASE_TIME); // Fetch the release time from environment variables
-		const envPasskey = process.env.BOUNTY_PASSKEY; // Fetch the passkey from environment variables
-
-		// Verify the passkey
-		if (!passkey || passkey !== envPasskey) {
-			return res
-				.status(403)
-				.json({ error: "Invalid or missing passkey.", success: false });
-		}
 
 		// Check if the current time is past the release time
 		const currentTime = new Date();
