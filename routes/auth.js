@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
+const Team = require("../models/Team");
 const authenticate = require("../middleware/authenticate");
 
 router.post("/login", async (req, res) => {
@@ -19,6 +20,13 @@ router.post("/login", async (req, res) => {
 				message: "No user found",
 				success: false,
 			});
+		}
+
+		const team = await Team.findById(user.team);
+		if (team.firstLogin == null || team.firstLogin == undefined) {
+			// If the team has not logged in before, set the firstLogin date
+			team.firstLogin = Date.now();
+			await team.save();
 		}
 
 		if ((await bcrypt.compare(password, user.password)) == false) {

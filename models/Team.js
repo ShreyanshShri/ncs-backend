@@ -17,6 +17,9 @@ const TeamSchema = new mongoose.Schema({
 		default: 1,
 		// required: true, // temperarily removed for testing
 	},
+	firstLogin: {
+		type: Date,
+	},
 	assignedBounty: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Bounty",
