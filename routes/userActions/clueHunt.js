@@ -83,7 +83,7 @@ router.get("/assigned-clues", authenticate, async (req, res) => {
 			return { clue: clues[index].question };
 		});
 
-		res.status(200).json({ assignedClues, success: true });
+		res.status(200).json({ assignedClues, releaseTime, success: true });
 	} catch (error) {
 		console.error("Error fetching assigned clues:", error);
 		res.status(500).json({ error: "Internal server error.", success: false });

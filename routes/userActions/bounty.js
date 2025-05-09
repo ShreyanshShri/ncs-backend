@@ -96,7 +96,7 @@ router.get("/get-bounties", authenticate, async (req, res) => {
 			"-solutions"
 		);
 
-		res.status(200).json({ bounty, success: true });
+		res.status(200).json({ bounty, releaseTime, success: true });
 	} catch (error) {
 		console.error("Error fetching bounties:", error);
 		res.status(500).json({ error: "Internal server error.", success: false });

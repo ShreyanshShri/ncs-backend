@@ -32,6 +32,9 @@ const TeamSchema = new mongoose.Schema({
 			filename: {
 				type: String,
 			},
+			bugDescription: {
+				type: String,
+			},
 			time: {
 				type: Date,
 				default: Date.now, // Automatically sets the current date when a solution is added

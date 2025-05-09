@@ -69,6 +69,7 @@ router.get("/get-user", authenticate, async (req, res) => {
 			clueHuntOrder: user.clueHuntOrder,
 			assignedBounty: user.assignedBounty,
 			clueHuntResponse: user.clueHuntResponse,
+			team: user.teamId,
 			success: true,
 		});
 	} catch (err) {
