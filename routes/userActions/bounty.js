@@ -103,4 +103,15 @@ router.get("/get-bounties", authenticate, async (req, res) => {
 	}
 });
 
+router.get("/timings", async (req, res) => {
+	const bountyReleaseTime = new Date(process.env.BOUNTY_RELEASE_TIME);
+	const bountyEndTime = new Date(process.env.BOUNTY_END_TIME);
+
+	res.status(200).json({
+		bountyReleaseTime,
+		bountyEndTime,
+		success: true,
+	});
+});
+
 module.exports = router;

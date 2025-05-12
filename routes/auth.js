@@ -60,10 +60,18 @@ router.get("/get-user", authenticate, async (req, res) => {
 
 	try {
 		const user = await User.findOne({ email: email });
+		const team = await Team.findById(user.team);
 
 		if (user == null || user == undefined) {
 			return res.status(400).json({
 				message: "No user found",
+				success: false,
+			});
+		}
+
+		if (team == null || team == undefined) {
+			return res.status(400).json({
+				message: "No team found",
 				success: false,
 			});
 		}
@@ -74,10 +82,9 @@ router.get("/get-user", authenticate, async (req, res) => {
 			email: user.email,
 			year: user.year,
 			admissionNumber: user.admissionNumber,
-			clueHuntOrder: user.clueHuntOrder,
-			assignedBounty: user.assignedBounty,
-			clueHuntResponse: user.clueHuntResponse,
 			team: user.teamId,
+			hasPassedBountyHunt: team.hasPassedBountyHunt,
+			solutions: team.solutions,
 			success: true,
 		});
 	} catch (err) {

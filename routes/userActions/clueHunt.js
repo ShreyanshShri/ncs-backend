@@ -90,4 +90,15 @@ router.get("/assigned-clues", authenticate, async (req, res) => {
 	}
 });
 
+router.get("/timings", async (req, res) => {
+	const clueHuntStartTime = new Date(process.env.CLUE_START_TIME);
+	const clueHuntEndTime = new Date(process.env.CLUE_END_TIME);
+
+	res.status(200).json({
+		clueHuntStartTime,
+		clueHuntEndTime,
+		success: true,
+	});
+});
+
 module.exports = router;
