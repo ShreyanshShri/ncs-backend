@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
@@ -29,7 +28,7 @@ router.post("/login", async (req, res) => {
 			await team.save();
 		}
 
-		if ((await bcrypt.compare(password, user.password)) == false) {
+		if (password !== user.password) {
 			return res.status(400).json({
 				message: "Invalid password",
 				success: false,
@@ -37,7 +36,7 @@ router.post("/login", async (req, res) => {
 		}
 
 		const token = jwt.sign(
-			{ email: email, type: "user" },
+			{ email: email, type: "user", mobile: user.mobile },
 			process.env.JWT_SECRET
 		);
 
@@ -57,16 +56,20 @@ router.post("/login", async (req, res) => {
 
 router.get("/get-user", authenticate, async (req, res) => {
 	const email = req.user.email;
+	const mobile = req.user.mobile;
 
 	try {
-		const user = await User.findOne({ email: email });
+		let user = await User.findOne({ email: email }); // user or mobile
 		const team = await Team.findById(user.team);
 
 		if (user == null || user == undefined) {
-			return res.status(400).json({
-				message: "No user found",
-				success: false,
-			});
+			user = await User.findOne({ mobile: mobile });
+			if (user == null || user == undefined) {
+				return res.status(400).json({
+					message: "No user found",
+					success: false,
+				});
+			}
 		}
 
 		if (team == null || team == undefined) {

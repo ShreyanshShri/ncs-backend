@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
+const User = require("../../models/User");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-const { users } = require("../data/users"); // Assuming users are stored in a separate file
+const { users } = require("../../data/users"); // Assuming users are stored in a separate file
 
 const seedUsers = async () => {
 	try {

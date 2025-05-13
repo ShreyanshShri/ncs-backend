@@ -7,8 +7,16 @@ const UserSchema = new mongoose.Schema({
 	},
 	email: {
 		type: String,
+		// unique: true,
+	},
+	mobile: {
+		type: String,
+		// unique: true,
+	},
+	zealId: {
+		type: String,
 		required: true,
-		unique: true,
+		// unique: true,
 	},
 	password: {
 		type: String,
@@ -17,13 +25,11 @@ const UserSchema = new mongoose.Schema({
 	year: {
 		type: Number,
 		default: 1,
-		// required: true, // temperarily removed for testing
+		required: true, // temperarily removed for testing
 	},
 	admissionNumber: {
 		type: String,
 		default: "2023",
-		// required: true, // temperarily removed for testing
-		// unique: true, // temperarily removed for testing
 	},
 	teamId: {
 		type: String,

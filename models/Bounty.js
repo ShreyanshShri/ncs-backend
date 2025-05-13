@@ -27,10 +27,6 @@ const BountySchema = new mongoose.Schema({
 				type: Number,
 				required: true,
 			},
-			bugDescription: {
-				type: String,
-				required: true,
-			},
 		},
 	],
 });

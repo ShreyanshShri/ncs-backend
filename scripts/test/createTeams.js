@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
-const Team = require("../models/Team");
+const User = require("../../models/User");
+const Team = require("../../models/Team");
 require("dotenv").config();
 
 const createTeams = async () => {
