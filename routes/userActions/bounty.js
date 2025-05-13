@@ -6,6 +6,7 @@ const Team = require("../../models/Team");
 const authenticate = require("../../middleware/authenticate");
 
 router.post("/submit-solution", authenticate, async (req, res) => {
+	const email = req.user.email; // Assuming `authenticate` middleware attaches the authenticated user's email to `req.user`
 	const endTime = new Date(process.env.BOUNTY_END_TIME); // Fetch the release time from environment variables
 	const currentTime = new Date();
 	if (currentTime > endTime) {
