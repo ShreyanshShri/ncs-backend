@@ -27,9 +27,18 @@ router.post("/submit-cluehunt", authenticate, async (req, res) => {
 		}
 
 		// Find the user
-		const user = await User.findOne({ email: email });
-		if (!user) {
-			return res.status(404).json({ error: "User not found.", success: false });
+		let user = await User.findOne({
+			email: email,
+		});
+
+		if (user == null || user == undefined) {
+			user = await User.findOne({ mobile: email });
+			if (user == null || user == undefined) {
+				return res.status(400).json({
+					message: "No user found",
+					success: false,
+				});
+			}
 		}
 
 		const team = await Team.findById(user.team); // Populate the team field
@@ -68,9 +77,18 @@ router.get("/assigned-clues", authenticate, async (req, res) => {
 		}
 
 		// Find the user
-		const user = await User.findOne({ email: email });
-		if (!user) {
-			return res.status(404).json({ error: "User not found.", success: false });
+		let user = await User.findOne({
+			email: email,
+		});
+
+		if (user == null || user == undefined) {
+			user = await User.findOne({ mobile: email });
+			if (user == null || user == undefined) {
+				return res.status(400).json({
+					message: "No user found",
+					success: false,
+				});
+			}
 		}
 
 		const team = await Team.findById(user.team); // Populate the team field
