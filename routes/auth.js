@@ -10,15 +10,18 @@ router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
-		const user = await User.findOne({
+		let user = await User.findOne({
 			email: email,
 		});
 
 		if (user == null || user == undefined) {
-			return res.status(400).json({
-				message: "No user found",
-				success: false,
-			});
+			user = await User.findOne({ mobile: email });
+			if (user == null || user == undefined) {
+				return res.status(400).json({
+					message: "No user found",
+					success: false,
+				});
+			}
 		}
 
 		const team = await Team.findById(user.team);
@@ -56,7 +59,6 @@ router.post("/login", async (req, res) => {
 
 router.get("/get-user", authenticate, async (req, res) => {
 	const email = req.user.email;
-	const mobile = req.user.mobile;
 
 	try {
 		let user = await User.findOne({ email: email }); // user or mobile
