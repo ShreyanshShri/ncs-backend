@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
 		}
 
 		const token = jwt.sign(
-			{ email: email, type: "user", mobile: email },
+			{ email: email, type: "user" },
 			process.env.JWT_SECRET
 		);
 
@@ -63,7 +63,7 @@ router.get("/get-user", authenticate, async (req, res) => {
 		const team = await Team.findById(user.team);
 
 		if (user == null || user == undefined) {
-			user = await User.findOne({ mobile: mobile });
+			user = await User.findOne({ mobile: email });
 			if (user == null || user == undefined) {
 				return res.status(400).json({
 					message: "No user found",
