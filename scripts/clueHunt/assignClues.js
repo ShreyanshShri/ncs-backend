@@ -12,34 +12,34 @@ const assignClues = async () => {
 		});
 		console.log("Connected to the database");
 
-		// Fetch all users
+		// Fetch all teams
 		const teams = await Team.find();
 
 		// Get the total number of clues
 		const totalClues = clues.length;
+		const cluesToAssign = 5; // Number of clues to assign to each team
 
 		for (const team of teams) {
-			console.log(`Assigning clues to user: ${team.teamId}`);
+			console.log(`Assigning clues to team: ${team.teamId}`);
 
-			// Generate a random order of clue indices
-			const randomIndices = Array.from(
-				{ length: totalClues },
-				(_, i) => i
-			).sort(() => Math.random() - 0.5);
+			// Generate a random order of clue indices and select only 5
+			const randomIndices = Array.from({ length: totalClues }, (_, i) => i)
+				.sort(() => Math.random() - 0.5)
+				.slice(0, cluesToAssign);
 
-			// Combine the answers of the clues in the random order
+			// Combine the answers of the selected clues in the random order
 			const combinedAnswers = randomIndices
 				.map((index) => clues[index].answer)
 				.join("");
 
-			// Assign the random indices and combined answers to the user
+			// Assign the random indices and combined answers to the team
 			team.clueHuntOrder = randomIndices;
 			team.clueHuntExpectedAnswer = combinedAnswers;
 
-			// Save the updated user
+			// Save the updated team
 			await team.save();
 
-			console.log(`Clues assigned to user: ${team.teamId}`);
+			console.log(`Clues assigned to team: ${team.teamId}`);
 		}
 
 		// Disconnect from the database

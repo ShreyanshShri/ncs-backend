@@ -61,6 +61,8 @@ router.post("/submit-solution", authenticate, async (req, res) => {
 			time: new Date(), // Set the current time as the submission time
 		});
 
+		team.hasPassedBountyHunt = true; // Set the flag to true
+
 		// Save the user document
 		await team.save();
 
